@@ -2,6 +2,26 @@
 
 Strict Machine is a declarative DSL for building asynchronously evaluated Finite State Machines.
 
+Release builds are available from [Maven Central](https://repo.maven.apache.org/maven2/) and SNAPSHOT builds are available from the [Sonatype OSS Snapshot Repository](https://oss.sonatype.org/content/repositories/snapshots/).
+
+## Gradle
+```
+dependencies {
+    compile("com.digitalpetri.fsm:strict-machine:0.1-SNAPSHOT")
+}
+```
+
+## Maven
+```
+<dependencies>
+    <dependency>
+      <groupId>com.digitalpetri.fsm</groupId>
+      <artifactId>strict-machine</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
+
 
 # What does it look like?
 
