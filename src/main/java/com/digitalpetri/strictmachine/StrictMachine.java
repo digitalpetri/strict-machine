@@ -40,8 +40,7 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
 
     private final long instanceId = INSTANCE_ID.getAndIncrement();
 
-    private volatile boolean paused = false;
-    private volatile boolean pollSubmitted = false;
+    private volatile boolean pollExecuted = false;
     private final Object queueLock = new Object();
     private final ArrayDeque<PendingEvent> eventQueue = new ArrayDeque<>();
     private final ArrayDeque<PendingEvent> eventShelf = new ArrayDeque<>();
@@ -92,7 +91,7 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
         synchronized (queueLock) {
             eventQueue.add(new PendingEvent(event, stateConsumer));
 
-            maybeSubmitPoll();
+            maybeExecutePoll();
         }
     }
 
@@ -116,11 +115,11 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
         }
     }
 
-    private void maybeSubmitPoll() {
+    private void maybeExecutePoll() {
         synchronized (queueLock) {
-            if (!pollSubmitted && !paused && !eventQueue.isEmpty()) {
+            if (!pollExecuted && !eventQueue.isEmpty()) {
                 executor.execute(new PollAndEvaluate());
-                pollSubmitted = true;
+                pollExecuted = true;
             }
         }
     }
@@ -223,10 +222,10 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
             }
 
             synchronized (queueLock) {
-                if (eventQueue.isEmpty() || paused) {
-                    pollSubmitted = false;
+                if (eventQueue.isEmpty()) {
+                    pollExecuted = false;
                 } else {
-                    // pollSubmitted remains true
+                    // pollExecuted remains true
                     executor.execute(new PollAndEvaluate());
                 }
             }
@@ -272,7 +271,7 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
                         eventQueue.addFirst(eventShelf.removeLast());
                     }
 
-                    maybeSubmitPoll();
+                    maybeExecutePoll();
                 }
             } finally {
                 readWriteLock.writeLock().unlock();
