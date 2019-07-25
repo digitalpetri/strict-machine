@@ -37,6 +37,8 @@ public class FsmBuilder<S extends Enum<S>, E> {
 
     private final List<TransitionAction<S, E>> transitionActions = new ArrayList<>();
 
+    private ActionProxy<S, E> actionProxy = null;
+
     private final Logger logger;
     private final Executor executor;
 
@@ -134,10 +136,20 @@ public class FsmBuilder<S extends Enum<S>, E> {
         transitionActions.add(transitionAction);
     }
 
+    /**
+     * Configure an {@link ActionProxy} for the {@link Fsm} instance being built.
+     *
+     * @param actionProxy an {@link ActionProxy} for the {@link Fsm} instance being built.
+     */
+    public void setActionProxy(ActionProxy<S, E> actionProxy) {
+        this.actionProxy = actionProxy;
+    }
+
     public Fsm<S, E> build(S initialState) {
         return new StrictMachine<>(
             logger,
             executor,
+            actionProxy,
             initialState,
             new ArrayList<>(transitions),
             new ArrayList<>(transitionActions)
