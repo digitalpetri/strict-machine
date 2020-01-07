@@ -54,6 +54,7 @@ public interface Fsm<S, E> {
      *
      * @param event the event to evaluate.
      * @return the state transitioned to as a result of evaluating {@code event}.
+     * @throws InterruptedException if interrupted while blocking.
      */
     S fireEventBlocking(E event) throws InterruptedException;
 

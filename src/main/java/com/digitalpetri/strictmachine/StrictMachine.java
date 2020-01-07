@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.digitalpetri.strictmachine.dsl.ActionContext;
+import com.digitalpetri.strictmachine.dsl.ActionProxy;
 import com.digitalpetri.strictmachine.dsl.Transition;
 import com.digitalpetri.strictmachine.dsl.TransitionAction;
 import org.slf4j.Logger;
@@ -51,6 +52,7 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
 
     private final Logger logger;
     private final Executor executor;
+    private final ActionProxy<S, E> actionProxy;
     private final List<Transition<S, E>> transitions;
     private final List<TransitionAction<S, E>> transitionActions;
 
@@ -58,12 +60,14 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
     public StrictMachine(
         Logger logger,
         Executor executor,
+        ActionProxy<S, E> actionProxy,
         S initialState,
         List<Transition<S, E>> transitions,
         List<TransitionAction<S, E>> transitionActions) {
 
         this.logger = logger;
         this.executor = executor;
+        this.actionProxy = actionProxy;
         this.transitions = transitions;
         this.transitionActions = transitionActions;
 
@@ -197,14 +201,25 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
 
                 matchingActions.forEach(transitionAction -> {
                     try {
-                        if (logger.isTraceEnabled()) {
-                            logger.trace(
-                                "[{}] executing TransitionAction: {}",
-                                instanceId, transitionAction
-                            );
-                        }
+                        if (actionProxy == null) {
+                            if (logger.isTraceEnabled()) {
+                                logger.trace(
+                                    "[{}] executing TransitionAction: {}",
+                                    instanceId, transitionAction
+                                );
+                            }
 
-                        transitionAction.execute(actionContext);
+                            transitionAction.execute(actionContext);
+                        } else {
+                            if (logger.isTraceEnabled()) {
+                                logger.trace(
+                                    "[{}] executing (via proxy) TransitionAction: {}",
+                                    instanceId, transitionAction
+                                );
+                            }
+
+                            actionProxy.execute(actionContext, transitionAction::execute);
+                        }
                     } catch (Throwable ex) {
                         logger.warn(
                             "[{}] Uncaught Throwable executing TransitionAction: {}",
