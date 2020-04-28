@@ -17,7 +17,9 @@
 package com.digitalpetri.strictmachine.dsl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -40,6 +42,7 @@ public class FsmBuilder<S extends Enum<S>, E> {
     private ActionProxy<S, E> actionProxy = null;
 
     private final Logger logger;
+    private final Map<String, String> mdc;
     private final Executor executor;
 
     public FsmBuilder() {
@@ -47,9 +50,13 @@ public class FsmBuilder<S extends Enum<S>, E> {
     }
 
     public FsmBuilder(Executor executor, String loggerName) {
-        this.executor = executor;
+        this(executor, loggerName, Collections.emptyMap());
+    }
 
+    public FsmBuilder(Executor executor, String loggerName, Map<String, String> mdc) {
+        this.executor = executor;
         this.logger = LoggerFactory.getLogger(loggerName);
+        this.mdc = mdc;
     }
 
     /**
@@ -148,6 +155,7 @@ public class FsmBuilder<S extends Enum<S>, E> {
     public Fsm<S, E> build(S initialState) {
         return new StrictMachine<>(
             logger,
+            mdc,
             executor,
             actionProxy,
             initialState,

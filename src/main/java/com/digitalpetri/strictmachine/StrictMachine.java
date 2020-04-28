@@ -18,6 +18,7 @@ package com.digitalpetri.strictmachine;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +35,7 @@ import com.digitalpetri.strictmachine.dsl.ActionProxy;
 import com.digitalpetri.strictmachine.dsl.Transition;
 import com.digitalpetri.strictmachine.dsl.TransitionAction;
 import org.slf4j.Logger;
+import org.slf4j.MDC;
 
 public class StrictMachine<S, E> implements Fsm<S, E> {
 
@@ -51,11 +53,11 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
     private final AtomicReference<S> state = new AtomicReference<>();
 
     private final Logger logger;
+    private final Map<String, String> mdc;
     private final Executor executor;
     private final ActionProxy<S, E> actionProxy;
     private final List<Transition<S, E>> transitions;
     private final List<TransitionAction<S, E>> transitionActions;
-
 
     public StrictMachine(
         Logger logger,
@@ -65,7 +67,20 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
         List<Transition<S, E>> transitions,
         List<TransitionAction<S, E>> transitionActions) {
 
+        this(logger, Collections.emptyMap(), executor, actionProxy, initialState, transitions, transitionActions);
+    }
+
+    public StrictMachine(
+        Logger logger,
+        Map<String, String> mdc,
+        Executor executor,
+        ActionProxy<S, E> actionProxy,
+        S initialState,
+        List<Transition<S, E>> transitions,
+        List<TransitionAction<S, E>> transitionActions) {
+
         this.logger = logger;
+        this.mdc = mdc;
         this.executor = executor;
         this.actionProxy = actionProxy;
         this.transitions = transitions;
@@ -169,13 +184,18 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
                 state.set(nextState);
 
                 if (logger.isDebugEnabled()) {
-                    logger.debug(
-                        "[{}] {} x {} = {}",
-                        instanceId,
-                        padRight(String.format("S(%s)", currState)),
-                        padRight(String.format("E(%s)", event)),
-                        padRight(String.format("S'(%s)", nextState))
-                    );
+                    mdc.forEach(MDC::put);
+                    try {
+                        logger.debug(
+                            "[{}] {} x {} = {}",
+                            instanceId,
+                            padRight(String.format("S(%s)", currState)),
+                            padRight(String.format("E(%s)", event)),
+                            padRight(String.format("S'(%s)", nextState))
+                        );
+                    } finally {
+                        mdc.keySet().forEach(MDC::remove);
+                    }
                 }
 
                 ActionContextImpl actionContext = new ActionContextImpl(
@@ -193,38 +213,58 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
                 }
 
                 if (logger.isTraceEnabled()) {
-                    logger.trace(
-                        "[{}] found {} matching TransitionActions",
-                        instanceId, matchingActions.size()
-                    );
+                    mdc.forEach(MDC::put);
+                    try {
+                        logger.trace(
+                            "[{}] found {} matching TransitionActions",
+                            instanceId, matchingActions.size()
+                        );
+                    } finally {
+                        mdc.keySet().forEach(MDC::remove);
+                    }
                 }
 
                 matchingActions.forEach(transitionAction -> {
                     try {
                         if (actionProxy == null) {
                             if (logger.isTraceEnabled()) {
-                                logger.trace(
-                                    "[{}] executing TransitionAction: {}",
-                                    instanceId, transitionAction
-                                );
+                                mdc.forEach(MDC::put);
+                                try {
+                                    logger.trace(
+                                        "[{}] executing TransitionAction: {}",
+                                        instanceId, transitionAction
+                                    );
+                                } finally {
+                                    mdc.keySet().forEach(MDC::remove);
+                                }
                             }
 
                             transitionAction.execute(actionContext);
                         } else {
                             if (logger.isTraceEnabled()) {
-                                logger.trace(
-                                    "[{}] executing (via proxy) TransitionAction: {}",
-                                    instanceId, transitionAction
-                                );
+                                mdc.forEach(MDC::put);
+                                try {
+                                    logger.trace(
+                                        "[{}] executing (via proxy) TransitionAction: {}",
+                                        instanceId, transitionAction
+                                    );
+                                } finally {
+                                    mdc.keySet().forEach(MDC::remove);
+                                }
                             }
 
                             actionProxy.execute(actionContext, transitionAction::execute);
                         }
                     } catch (Throwable ex) {
-                        logger.warn(
-                            "[{}] Uncaught Throwable executing TransitionAction: {}",
-                            instanceId, transitionAction, ex
-                        );
+                        mdc.forEach(MDC::put);
+                        try {
+                            logger.warn(
+                                "[{}] Uncaught Throwable executing TransitionAction: {}",
+                                instanceId, transitionAction, ex
+                            );
+                        } finally {
+                            mdc.keySet().forEach(MDC::remove);
+                        }
                     }
                 });
 
