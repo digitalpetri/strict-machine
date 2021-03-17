@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.digitalpetri.fsm"
-version = "0.4-SNAPSHOT"
+version = "0.4"
 
 repositories {
     mavenCentral()
