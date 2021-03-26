@@ -16,16 +16,16 @@
 
 package com.digitalpetri.strictmachine.dsl;
 
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ActionToBuilder<S extends Enum<S>, E> {
 
     private final Predicate<S> toFilter;
-    private final List<TransitionAction<S, E>> transitionActions;
+    private final LinkedList<TransitionAction<S, E>> transitionActions;
 
-    ActionToBuilder(Predicate<S> toFilter, List<TransitionAction<S, E>> transitionActions) {
+    ActionToBuilder(Predicate<S> toFilter, LinkedList<TransitionAction<S, E>> transitionActions) {
         this.toFilter = toFilter;
         this.transitionActions = transitionActions;
     }

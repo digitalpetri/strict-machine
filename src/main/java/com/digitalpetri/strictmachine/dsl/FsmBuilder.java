@@ -18,6 +18,7 @@ package com.digitalpetri.strictmachine.dsl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,7 +38,7 @@ public class FsmBuilder<S extends Enum<S>, E> {
 
     private final List<Transition<S, E>> transitions = new ArrayList<>();
 
-    private final List<TransitionAction<S, E>> transitionActions = new ArrayList<>();
+    private final LinkedList<TransitionAction<S, E>> transitionActions = new LinkedList<>();
 
     private ActionProxy<S, E> actionProxy = null;
 

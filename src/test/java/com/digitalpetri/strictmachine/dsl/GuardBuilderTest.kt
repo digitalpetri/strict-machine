@@ -19,6 +19,7 @@ package com.digitalpetri.strictmachine.dsl
 import com.digitalpetri.strictmachine.FsmContext
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.function.Predicate
 
@@ -32,7 +33,7 @@ class GuardBuilderTest {
             { e -> e == Event.E1 },
             State.S2
         )
-        val transitionActions = mutableListOf<TransitionAction<State, Event>>()
+        val transitionActions = LinkedList<TransitionAction<State, Event>>()
 
         val gb = GuardBuilder(transition, transitionActions)
 

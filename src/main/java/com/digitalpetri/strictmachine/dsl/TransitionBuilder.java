@@ -16,6 +16,7 @@
 
 package com.digitalpetri.strictmachine.dsl;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -23,12 +24,13 @@ public class TransitionBuilder<S extends Enum<S>, E> {
 
     private final S from;
     private final List<Transition<S, E>> transitions;
-    private final List<TransitionAction<S, E>> transitionActions;
+    private final LinkedList<TransitionAction<S, E>> transitionActions;
 
     TransitionBuilder(
         S from,
         List<Transition<S, E>> transitions,
-        List<TransitionAction<S, E>> transitionActions) {
+        LinkedList<TransitionAction<S, E>> transitionActions
+    ) {
 
         this.from = from;
         this.transitions = transitions;

@@ -16,7 +16,7 @@
 
 package com.digitalpetri.strictmachine.dsl;
 
-import java.util.List;
+import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -25,13 +25,14 @@ public class ActionBuilder<S, E> {
     private Predicate<S> from;
     private Predicate<S> to;
     private Predicate<E> via;
-    private final List<TransitionAction<S, E>> transitionActions;
+    private final LinkedList<TransitionAction<S, E>> transitionActions;
 
     ActionBuilder(
         Predicate<S> from,
         Predicate<S> to,
         Predicate<E> via,
-        List<TransitionAction<S, E>> transitionActions) {
+        LinkedList<TransitionAction<S, E>> transitionActions
+    ) {
 
         this.from = from;
         this.to = to;
@@ -39,7 +40,27 @@ public class ActionBuilder<S, E> {
         this.transitionActions = transitionActions;
     }
 
+    /**
+     * Add {@code action} to the list of {@link TransitionAction}s to be executed.
+     * <p>
+     * Actions are executed in the order they appear in the list.
+     *
+     * @param action the action to execute.
+     * @return this {@link ActionBuilder}.
+     */
     public ActionBuilder<S, E> execute(Action<S, E> action) {
+        return executeLast(action);
+    }
+
+    /**
+     * Add {@code action} to the end of the list of {@link TransitionAction}s to be executed.
+     * <p>
+     * Actions are executed in the order they appear in the list.
+     *
+     * @param action the action to execute.
+     * @return this {@link ActionBuilder}.
+     */
+    public ActionBuilder<S, E> executeLast(Action<S, E> action) {
         TransitionAction<S, E> transitionAction = new PredicatedTransitionAction<>(
             from,
             to,
@@ -47,7 +68,28 @@ public class ActionBuilder<S, E> {
             action::execute
         );
 
-        transitionActions.add(transitionAction);
+        transitionActions.addLast(transitionAction);
+
+        return this;
+    }
+
+    /**
+     * Add {@code action} to the beginning of the list of {@link TransitionAction}s to be executed.
+     * <p>
+     * Actions are executed in the order they appear in the list.
+     *
+     * @param action the action to execute.
+     * @return this {@link ActionBuilder}.
+     */
+    public ActionBuilder<S, E> executeFirst(Action<S, E> action) {
+        TransitionAction<S, E> transitionAction = new PredicatedTransitionAction<>(
+            from,
+            to,
+            via,
+            action::execute
+        );
+
+        transitionActions.addFirst(transitionAction);
 
         return this;
     }
@@ -63,7 +105,8 @@ public class ActionBuilder<S, E> {
             Predicate<S> from,
             Predicate<S> to,
             Predicate<E> via,
-            Consumer<ActionContext<S, E>> action) {
+            Consumer<ActionContext<S, E>> action
+        ) {
 
             this.from = from;
             this.to = to;

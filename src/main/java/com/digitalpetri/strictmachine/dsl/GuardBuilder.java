@@ -16,7 +16,7 @@
 
 package com.digitalpetri.strictmachine.dsl;
 
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -28,7 +28,8 @@ public class GuardBuilder<S, E> extends ActionBuilder<S, E> {
 
     GuardBuilder(
         PredicatedTransition<S, E> transition,
-        List<TransitionAction<S, E>> transitionActions) {
+        LinkedList<TransitionAction<S, E>> transitionActions
+    ) {
 
         super(
             transition.getFrom(),

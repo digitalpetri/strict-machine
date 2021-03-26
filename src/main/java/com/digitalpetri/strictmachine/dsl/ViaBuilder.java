@@ -16,7 +16,7 @@
 
 package com.digitalpetri.strictmachine.dsl;
 
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -24,12 +24,13 @@ public class ViaBuilder<S, E> {
 
     private final Predicate<S> fromFilter;
     private final Predicate<S> toFilter;
-    private final List<TransitionAction<S, E>> transitionActions;
+    private final LinkedList<TransitionAction<S, E>> transitionActions;
 
     ViaBuilder(
         Predicate<S> fromFilter,
         Predicate<S> toFilter,
-        List<TransitionAction<S, E>> transitionActions) {
+        LinkedList<TransitionAction<S, E>> transitionActions
+    ) {
 
         this.fromFilter = fromFilter;
         this.toFilter = toFilter;
