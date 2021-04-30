@@ -150,4 +150,6 @@ fb.onTransitionTo(State.Loading)
 
 See the full [AtmFsm](https://github.com/kevinherron/strict-machine/blob/master/src/test/java/com/digitalpetri/strictmachine/dsl/atm/AtmFsm.java) defined in the test suite.
 
-For an advanced example, see the FSM defined by [netty-channel-fsm](https://github.com/digitalpetri/netty-channel-fsm/blob/master/src/main/java/com/digitalpetri/netty/fsm/ChannelFsmFactory.java).
+Advanced examples from production code:
+- [ChannelFsmFactory](https://github.com/digitalpetri/netty-channel-fsm/blob/master/src/main/java/com/digitalpetri/netty/fsm/ChannelFsmFactory.java) from [netty-channel-fsm](https://github.com/digitalpetri/netty-channel-fsm).
+- [SessionFsmFactory](https://github.com/eclipse/milo/blob/master/opc-ua-sdk/sdk-client/src/main/java/org/eclipse/milo/opcua/sdk/client/session/SessionFsmFactory.java) from [Eclipse Milo](https://github.com/eclipse/milo).
