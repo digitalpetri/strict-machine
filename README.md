@@ -1,4 +1,5 @@
 # Strict Machine
+![Maven Central](https://img.shields.io/maven-central/v/com.digitalpetri.fsm/strict-machine)
 
 Strict Machine is a declarative DSL for building asynchronously evaluated Finite State Machines.
 
@@ -7,7 +8,7 @@ Release builds are available from [Maven Central](https://repo.maven.apache.org/
 ## Gradle
 ```
 dependencies {
-    compile("com.digitalpetri.fsm:strict-machine:0.1")
+    compile("com.digitalpetri.fsm:strict-machine:0.5")
 }
 ```
 
@@ -17,7 +18,7 @@ dependencies {
     <dependency>
       <groupId>com.digitalpetri.fsm</groupId>
       <artifactId>strict-machine</artifactId>
-      <version>0.1</version>
+      <version>0.5</version>
     </dependency>
 </dependencies>
 ```
