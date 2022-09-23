@@ -116,8 +116,10 @@ publishing {
 }
 
 signing {
-    useGpgCmd()
-    sign(publishing.publications["mavenJava"])
+    if (!version.toString().endsWith("SNAPSHOT")) {
+        useGpgCmd()
+        sign(publishing.publications["mavenJava"])
+    }
 }
 
 tasks.javadoc {
