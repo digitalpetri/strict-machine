@@ -67,4 +67,11 @@ public interface Fsm<S, E> {
      */
     <T> T getFromContext(Function<FsmContext<S, E>, T> get);
 
+    /**
+     * Provides safe access to the {@link FsmContext}.
+     *
+     * @param contextConsumer the callback that will receive the {@link FsmContext}.
+     */
+    void withContext(Consumer<FsmContext<S, E>> contextConsumer);
+
 }

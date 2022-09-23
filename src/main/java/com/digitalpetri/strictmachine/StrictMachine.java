@@ -134,6 +134,17 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
         }
     }
 
+    @Override
+    public void withContext(Consumer<FsmContext<S, E>> contextConsumer) {
+        try {
+            readWriteLock.writeLock().lock();
+
+            contextConsumer.accept(new FsmContextImpl());
+        } finally {
+            readWriteLock.writeLock().unlock();
+        }
+    }
+
     private void maybeExecutePoll() {
         synchronized (queueLock) {
             if (!pollExecuted && !eventQueue.isEmpty()) {
