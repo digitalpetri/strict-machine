@@ -8,7 +8,7 @@ Release builds are available from [Maven Central](https://repo.maven.apache.org/
 ## Gradle
 ```
 dependencies {
-    compile("com.digitalpetri.fsm:strict-machine:0.7")
+    compile("com.digitalpetri.fsm:strict-machine:1.0.0-SNAPSHOT")
 }
 ```
 
@@ -18,7 +18,7 @@ dependencies {
     <dependency>
       <groupId>com.digitalpetri.fsm</groupId>
       <artifactId>strict-machine</artifactId>
-      <version>0.7</version>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 ```
