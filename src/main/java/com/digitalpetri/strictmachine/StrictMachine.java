@@ -156,7 +156,9 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
       synchronized (queueLock) {
         pending = eventQueue.poll();
 
-        if (pending == null) {return;}
+        if (pending == null) {
+          return;
+        }
       }
 
       E event = pending.event;

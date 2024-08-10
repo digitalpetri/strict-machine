@@ -23,7 +23,12 @@ class Transitions {
 
   private Transitions() {}
 
-  static <S, E> PredicatedTransition<S, E> fromInstanceViaClass(S state, Class<? extends E> event, S target) {
+  static <S, E> PredicatedTransition<S, E> fromInstanceViaClass(
+      S state,
+      Class<? extends E> event,
+      S target
+  ) {
+
     return new PredicatedTransition<>(
         s -> Objects.equals(s, state),
         e -> Objects.equals(e.getClass(), event),
@@ -31,7 +36,12 @@ class Transitions {
     );
   }
 
-  static <S, E> PredicatedTransition<S, E> fromInstanceViaDynamic(S state, Predicate<E> via, S target) {
+  static <S, E> PredicatedTransition<S, E> fromInstanceViaDynamic(
+      S state,
+      Predicate<E> via,
+      S target
+  ) {
+
     return new PredicatedTransition<>(
         s -> Objects.equals(s, state),
         via,
@@ -39,7 +49,12 @@ class Transitions {
     );
   }
 
-  static <S, E> PredicatedTransition<S, E> fromInstanceViaInstance(S state, E event, S target) {
+  static <S, E> PredicatedTransition<S, E> fromInstanceViaInstance(
+      S state,
+      E event,
+      S target
+  ) {
+
     return new PredicatedTransition<>(
         s -> Objects.equals(s, state),
         e -> Objects.equals(e, event),

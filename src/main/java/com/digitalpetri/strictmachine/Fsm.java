@@ -30,8 +30,8 @@ public interface Fsm<S, E> {
 
   /**
    * Fire an event for the FSM to evaluate.
-   * <p>
-   * The subsequent state transition may occur asynchronously. There is no guarantee that a
+   *
+   * <p>The subsequent state transition may occur asynchronously. There is no guarantee that a
    * subsequent call to {@link #getState()} reflects a state arrived at via evaluation of this
    * event.
    *
@@ -41,20 +41,20 @@ public interface Fsm<S, E> {
   void fireEvent(E event);
 
   /**
-   * Fire an event for the FSM to evaluate, providing a callback that will be invoked when the
-   * event is evaluated.
-   * <p>
-   * This callback may occur asynchronously.
+   * Fire an event for the FSM to evaluate, providing a callback that will be invoked when the event
+   * is evaluated.
+   *
+   * <p>This callback may occur asynchronously.
    *
    * @param event the event to evaluate.
-   * @param stateConsumer the callback that will receive the state transitioned to via evaluation
-   *     of {@code event}.
+   * @param stateConsumer the callback that will receive the state transitioned to via
+   *     evaluation of {@code event}.
    */
   void fireEvent(E event, Consumer<S> stateConsumer);
 
   /**
-   * Fire an event for the FSM to evaluate and block waiting until the state transitioned to as a result of
-   * evaluating {@code event} is available.
+   * Fire an event for the FSM to evaluate and block waiting until the state transitioned to as a
+   * result of evaluating {@code event} is available.
    *
    * @param event the event to evaluate.
    * @return the state transitioned to as a result of evaluating {@code event}.

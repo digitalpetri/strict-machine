@@ -1,12 +1,12 @@
 package com.digitalpetri.strictmachine.dsl;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+@SuppressWarnings("MethodName")
 class ActionToBuilderTest {
 
   @Test

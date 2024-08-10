@@ -42,8 +42,8 @@ public class ActionBuilder<S, E> {
 
   /**
    * Add {@code action} to the list of {@link TransitionAction}s to be executed.
-   * <p>
-   * Actions are executed in the order they appear in the list.
+   *
+   * <p>Actions are executed in the order they appear in the list.
    *
    * @param action the action to execute.
    * @return this {@link ActionBuilder}.
@@ -54,8 +54,8 @@ public class ActionBuilder<S, E> {
 
   /**
    * Add {@code action} to the end of the list of {@link TransitionAction}s to be executed.
-   * <p>
-   * Actions are executed in the order they appear in the list.
+   *
+   * <p>Actions are executed in the order they appear in the list.
    *
    * @param action the action to execute.
    * @return this {@link ActionBuilder}.
@@ -75,8 +75,8 @@ public class ActionBuilder<S, E> {
 
   /**
    * Add {@code action} to the beginning of the list of {@link TransitionAction}s to be executed.
-   * <p>
-   * Actions are executed in the order they appear in the list.
+   *
+   * <p>Actions are executed in the order they appear in the list.
    *
    * @param action the action to execute.
    * @return this {@link ActionBuilder}.

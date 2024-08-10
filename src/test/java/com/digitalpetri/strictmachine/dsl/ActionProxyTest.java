@@ -1,12 +1,11 @@
 package com.digitalpetri.strictmachine.dsl;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 class ActionProxyTest {
 
@@ -14,7 +13,6 @@ class ActionProxyTest {
   void actionProxyGetsCalled() throws InterruptedException {
     var fb = new FsmBuilder<State, Event>();
 
-    var actionProxyLatch = new CountDownLatch(2);
     var state3Latch = new CountDownLatch(1);
 
     fb.when(State.S1)
@@ -33,6 +31,8 @@ class ActionProxyTest {
         .on(Event.E3.class)
         .transitionTo(State.S1)
         .execute(ctx -> state3Latch.countDown());
+
+    var actionProxyLatch = new CountDownLatch(2);
 
     fb.setActionProxy((ctx, action) -> {
       actionProxyLatch.countDown();

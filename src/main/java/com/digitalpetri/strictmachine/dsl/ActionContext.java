@@ -20,8 +20,9 @@ import com.digitalpetri.strictmachine.FsmContext;
 
 /**
  * The context in which a {@link Action} is being executed.
- * <p>
- * Provides access to the transition criteria: the from state, to state, and event that triggered the transition.
+ *
+ * <p>Provides access to the transition criteria: the from state, to state, and event that triggered
+ * the transition.
  *
  * @param <S> state type
  * @param <E> event type

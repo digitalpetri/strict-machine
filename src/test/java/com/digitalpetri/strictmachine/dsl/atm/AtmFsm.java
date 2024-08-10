@@ -18,7 +18,6 @@ package com.digitalpetri.strictmachine.dsl.atm;
 
 import com.digitalpetri.strictmachine.Fsm;
 import com.digitalpetri.strictmachine.dsl.FsmBuilder;
-
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -68,12 +67,12 @@ public class AtmFsm {
 
   /**
    * Build an {@link AtmFsm}.
-   * <p>
-   * {@code builderStateFunction} may make modifications to the FSM before it's built via the builder and returns the
-   * desired initial state.
    *
-   * @param builderStateFunction invoked after the builder has set up all state transitions. Returns the desired
-   *                             initial state of the FSM.
+   * <p>{@code builderStateFunction} may make modifications to the FSM before it's built via the
+   * builder and returns the desired initial state.
+   *
+   * @param builderStateFunction invoked after the builder has set up all state transitions.
+   *     Returns the desired initial state of the FSM.
    * @return an {@link AtmFsm}.
    */
   static AtmFsm buildFsm(Function<FsmBuilder<State, Event>, State> builderStateFunction) {

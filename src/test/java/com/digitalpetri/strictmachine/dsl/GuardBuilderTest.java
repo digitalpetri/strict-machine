@@ -1,13 +1,12 @@
 package com.digitalpetri.strictmachine.dsl;
 
-import com.digitalpetri.strictmachine.FsmContext;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.digitalpetri.strictmachine.FsmContext;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 class GuardBuilderTest {
 

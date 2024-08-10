@@ -17,7 +17,6 @@
 package com.digitalpetri.strictmachine.dsl;
 
 import com.digitalpetri.strictmachine.FsmContext;
-
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.function.Predicate;

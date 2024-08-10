@@ -1,13 +1,12 @@
 package com.digitalpetri.strictmachine.dsl;
 
-import com.digitalpetri.strictmachine.FsmContext;
-import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.digitalpetri.strictmachine.FsmContext;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.Test;
 
 class StrictMachineTest {
 

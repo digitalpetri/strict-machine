@@ -1,11 +1,12 @@
 package com.digitalpetri.strictmachine.dsl.atm;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.digitalpetri.strictmachine.dsl.atm.AtmFsm.Event;
 import com.digitalpetri.strictmachine.dsl.atm.AtmFsm.State;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+@SuppressWarnings("MethodName")
 class AtmTest {
 
   @Test

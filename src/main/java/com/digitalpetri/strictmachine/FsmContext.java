@@ -37,9 +37,9 @@ public interface FsmContext<S, E> {
 
   /**
    * Shelve an event to be evaluated at some later time.
-   * <p>
-   * This is useful e.g. when an event can't be handled in the current state but shouldn't be discarded or ignored
-   * with an action-less internal transition.
+   *
+   * <p>This is useful e.g. when an event can't be handled in the current state but shouldn't be
+   * discarded or ignored with an action-less internal transition.
    *
    * @param event the event to be queued.
    * @see #processShelvedEvents()
@@ -52,7 +52,8 @@ public interface FsmContext<S, E> {
   void processShelvedEvents();
 
   /**
-   * Get the value identified by {@code key} from the context, or {@code null} if it does not exist.
+   * Get the value identified by {@code key} from the context, or {@code null} if it does not
+   * exist.
    *
    * @param key the {@link Key}.
    * @return the value identified by {@code key}, or {@code null} if it does not exist.
@@ -60,7 +61,8 @@ public interface FsmContext<S, E> {
   Object get(FsmContext.Key<?> key);
 
   /**
-   * Get and remove the value identified by {@code key} from the context, or {@code null} if it does not exist.
+   * Get and remove the value identified by {@code key} from the context, or {@code null} if it does
+   * not exist.
    *
    * @param key the {@link Key}.
    * @return the value identified by {@code key}, or {@code null} if it did not exist.
@@ -77,9 +79,9 @@ public interface FsmContext<S, E> {
 
   /**
    * Get the id assigned to this FSM instance.
-   * <p>
-   * The id is a monotonically increasing value assigned to each new instance to aid in determining which log
-   * messages belong to which instance.
+   *
+   * <p>The id is a monotonically increasing value assigned to each new instance to aid in
+   * determining which log messages belong to which instance.
    *
    * @return the id assigned to this FSM instance.
    */
@@ -95,9 +97,13 @@ public interface FsmContext<S, E> {
       this.type = type;
     }
 
-    public String name() {return name;}
+    public String name() {
+      return name;
+    }
 
-    public Class<T> type() {return type;}
+    public Class<T> type() {
+      return type;
+    }
 
     public T get(FsmContext<?, ?> context) {
       Object value = context.get(this);
@@ -117,11 +123,15 @@ public interface FsmContext<S, E> {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
       Key<?> key = (Key<?>) o;
-      return Objects.equals(name, key.name) &&
-          Objects.equals(type, key.type);
+      return Objects.equals(name, key.name)
+          && Objects.equals(type, key.type);
     }
 
     @Override

@@ -55,7 +55,8 @@ public class TransitionBuilder<S extends Enum<S>, E> {
   }
 
   /**
-   * Continue defining a {@link Transition} that is triggered by an event of type {@code eventClass}.
+   * Continue defining a {@link Transition} that is triggered by an event of type
+   * {@code eventClass}.
    *
    * @param eventClass the †ype of event that triggers this transition.
    * @return a {@link TransitionTo}.
@@ -72,7 +73,8 @@ public class TransitionBuilder<S extends Enum<S>, E> {
   }
 
   /**
-   * Continue defining a {@link Transition} that is triggered by any event that passes {@code eventFilter}.
+   * Continue defining a {@link Transition} that is triggered by any event that passes
+   * {@code eventFilter}.
    *
    * @param eventFilter the filter for events that trigger this transition.
    * @return a {@link TransitionTo}.

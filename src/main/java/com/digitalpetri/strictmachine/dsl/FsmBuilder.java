@@ -18,7 +18,6 @@ package com.digitalpetri.strictmachine.dsl;
 
 import com.digitalpetri.strictmachine.Fsm;
 import com.digitalpetri.strictmachine.StrictMachine;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,9 +58,11 @@ public class FsmBuilder<S extends Enum<S>, E> {
   }
 
   /**
-   * Start defining an {@link Action} that will be executed after an internal transition from/to {@code state}.
-   * <p>
-   * The criteria for the event that causes this transition is defined on the returned {@link ViaBuilder}.
+   * Start defining an {@link Action} that will be executed after an internal transition from/to
+   * {@code state}.
+   *
+   * <p>The criteria for the event that causes this transition is defined on the returned
+   * {@link ViaBuilder}.
    *
    * @param state the state experiencing an internal transition.
    * @return a {@link ViaBuilder}.
@@ -72,8 +73,8 @@ public class FsmBuilder<S extends Enum<S>, E> {
 
   /**
    * Start defining an {@link Action} that will be executed after a transition to {@code state}.
-   * <p>
-   * Further criteria for execution will be defined on the returned {@link ActionToBuilder}.
+   *
+   * <p>Further criteria for execution will be defined on the returned {@link ActionToBuilder}.
    *
    * @param state the state being transitioned to.
    * @return an {@link ActionToBuilder}.
@@ -83,9 +84,10 @@ public class FsmBuilder<S extends Enum<S>, E> {
   }
 
   /**
-   * Start defining an {@link Action} that will execute after a transition to any state that passes {@code filter}.
-   * <p>
-   * Further criteria for execution will be defined on the returned {@link ActionToBuilder}.
+   * Start defining an {@link Action} that will execute after a transition to any state that passes
+   * {@code filter}.
+   *
+   * <p>Further criteria for execution will be defined on the returned {@link ActionToBuilder}.
    *
    * @param filter the filter for states being transitioned to.
    * @return an {@link ActionToBuilder}.
@@ -105,7 +107,8 @@ public class FsmBuilder<S extends Enum<S>, E> {
   }
 
   /**
-   * Start defining an {@link Action} that will execute after a transition from any state that passes {@code filter}.
+   * Start defining an {@link Action} that will execute after a transition from any state that
+   * passes {@code filter}.
    *
    * @param filter the filter for states being transitioned from.
    * @return an {@link ActionFromBuilder}.

@@ -17,7 +17,6 @@
 package com.digitalpetri.strictmachine.dsl;
 
 import com.digitalpetri.strictmachine.FsmContext;
-
 import java.util.function.Predicate;
 
 class PredicatedTransition<S, E> implements Transition<S, E> {
