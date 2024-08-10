@@ -1,6 +1,5 @@
-package com.digitalpetri.strictmachine.internal;
+package com.digitalpetri.strictmachine;
 
-import com.digitalpetri.strictmachine.FsmLogging;
 import com.digitalpetri.strictmachine.FsmLogging.Level;
 import java.util.concurrent.atomic.AtomicReference;
 

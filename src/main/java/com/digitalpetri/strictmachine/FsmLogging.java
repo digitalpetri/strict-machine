@@ -1,7 +1,5 @@
 package com.digitalpetri.strictmachine;
 
-import com.digitalpetri.strictmachine.internal.Log;
-
 public final class FsmLogging {
 
   private FsmLogging() {}

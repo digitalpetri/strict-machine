@@ -21,7 +21,6 @@ import com.digitalpetri.strictmachine.dsl.ActionContext;
 import com.digitalpetri.strictmachine.dsl.ActionProxy;
 import com.digitalpetri.strictmachine.dsl.Transition;
 import com.digitalpetri.strictmachine.dsl.TransitionAction;
-import com.digitalpetri.strictmachine.internal.Log;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
