@@ -16,52 +16,52 @@
 
 package com.digitalpetri.strictmachine.dsl;
 
-import java.util.function.Predicate;
-
 import com.digitalpetri.strictmachine.FsmContext;
+
+import java.util.function.Predicate;
 
 class PredicatedTransition<S, E> implements Transition<S, E> {
 
-    private volatile Predicate<FsmContext<S, E>> guard = ctx -> true;
+  private volatile Predicate<FsmContext<S, E>> guard = ctx -> true;
 
-    private final Predicate<S> from;
-    private final Predicate<E> via;
-    private final S target;
+  private final Predicate<S> from;
+  private final Predicate<E> via;
+  private final S target;
 
-    PredicatedTransition(Predicate<S> from, Predicate<E> via, S target) {
-        this.from = from;
-        this.via = via;
-        this.target = target;
-    }
+  PredicatedTransition(Predicate<S> from, Predicate<E> via, S target) {
+    this.from = from;
+    this.via = via;
+    this.target = target;
+  }
 
-    @Override
-    public S target() {
-        return target;
-    }
+  @Override
+  public S target() {
+    return target;
+  }
 
-    @Override
-    public boolean matches(FsmContext<S, E> ctx, S state, E event) {
-        return from.test(state) && via.test(event) && guard.test(ctx);
-    }
+  @Override
+  public boolean matches(FsmContext<S, E> ctx, S state, E event) {
+    return from.test(state) && via.test(event) && guard.test(ctx);
+  }
 
-    Predicate<FsmContext<S, E>> getGuard() {
-        return guard;
-    }
+  Predicate<FsmContext<S, E>> getGuard() {
+    return guard;
+  }
 
-    Predicate<S> getFrom() {
-        return from;
-    }
+  Predicate<S> getFrom() {
+    return from;
+  }
 
-    Predicate<E> getVia() {
-        return via;
-    }
+  Predicate<E> getVia() {
+    return via;
+  }
 
-    S getTarget() {
-        return target;
-    }
+  S getTarget() {
+    return target;
+  }
 
-    void setGuard(Predicate<FsmContext<S, E>> guard) {
-        this.guard = guard;
-    }
+  void setGuard(Predicate<FsmContext<S, E>> guard) {
+    this.guard = guard;
+  }
 
 }

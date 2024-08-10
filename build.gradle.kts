@@ -1,8 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     `java-library`
-    kotlin("jvm") version "1.4.30"
     `maven-publish`
     signing
 }
@@ -15,10 +12,6 @@ repositories {
 }
 
 dependencies {
-    // BYO SLF4J
-    compileOnly("org.slf4j:slf4j-api:1.7.+")
-
-    testImplementation(kotlin("stdlib", "1.4.30"))
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
     testRuntimeOnly("org.slf4j:slf4j-simple:1.7.25")
@@ -26,12 +19,8 @@ dependencies {
 
 tasks {
     withType<JavaCompile> {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
-    }
-
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
     }
 
     withType<Test> {

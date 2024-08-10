@@ -16,113 +16,113 @@
 
 package com.digitalpetri.strictmachine.dsl.atm;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import com.digitalpetri.strictmachine.Fsm;
 import com.digitalpetri.strictmachine.dsl.FsmBuilder;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 public class AtmFsm {
 
-    private final Fsm<State, Event> fsm;
+  private final Fsm<State, Event> fsm;
 
-    private AtmFsm(Fsm<State, Event> fsm) {
-        this.fsm = fsm;
-    }
+  private AtmFsm(Fsm<State, Event> fsm) {
+    this.fsm = fsm;
+  }
 
-    void fireEvent(Event event, Consumer<State> stateConsumer) {
-        fsm.fireEvent(event, stateConsumer);
-    }
+  void fireEvent(Event event, Consumer<State> stateConsumer) {
+    fsm.fireEvent(event, stateConsumer);
+  }
 
-    State fireEventBlocking(Event event) throws InterruptedException {
-        return fsm.fireEventBlocking(event);
-    }
+  State fireEventBlocking(Event event) throws InterruptedException {
+    return fsm.fireEventBlocking(event);
+  }
 
-    enum State {
-        Idle,
-        Loading,
-        OutOfService,
-        InService,
-        Disconnected
-    }
+  enum State {
+    Idle,
+    Loading,
+    OutOfService,
+    InService,
+    Disconnected
+  }
 
-    enum Event {
-        Connected,
-        ConnectionClosed,
-        ConnectionLost,
-        ConnectionRestored,
-        LoadFail,
-        LoadSuccess,
-        Shutdown,
-        Startup
-    }
+  enum Event {
+    Connected,
+    ConnectionClosed,
+    ConnectionLost,
+    ConnectionRestored,
+    LoadFail,
+    LoadSuccess,
+    Shutdown,
+    Startup
+  }
 
-    /**
-     * Create a new {@link AtmFsm} in {@link State#Idle}.
-     *
-     * @return a new {@link AtmFsm} in {@link State#Idle}.
-     */
-    public static AtmFsm newAtmFsm() {
-        return buildFsm(fb -> State.Idle);
-    }
+  /**
+   * Create a new {@link AtmFsm} in {@link State#Idle}.
+   *
+   * @return a new {@link AtmFsm} in {@link State#Idle}.
+   */
+  public static AtmFsm newAtmFsm() {
+    return buildFsm(fb -> State.Idle);
+  }
 
-    /**
-     * Build an {@link AtmFsm}.
-     * <p>
-     * {@code builderStateFunction} may make modifications to the FSM before it's built via the builder and returns the
-     * desired initial state.
-     *
-     * @param builderStateFunction invoked after the builder has set up all state transitions. Returns the desired
-     *                             initial state of the FSM.
-     * @return an {@link AtmFsm}.
-     */
-    static AtmFsm buildFsm(Function<FsmBuilder<State, Event>, State> builderStateFunction) {
-        FsmBuilder<State, Event> fb = new FsmBuilder<>();
+  /**
+   * Build an {@link AtmFsm}.
+   * <p>
+   * {@code builderStateFunction} may make modifications to the FSM before it's built via the builder and returns the
+   * desired initial state.
+   *
+   * @param builderStateFunction invoked after the builder has set up all state transitions. Returns the desired
+   *                             initial state of the FSM.
+   * @return an {@link AtmFsm}.
+   */
+  static AtmFsm buildFsm(Function<FsmBuilder<State, Event>, State> builderStateFunction) {
+    FsmBuilder<State, Event> fb = new FsmBuilder<>();
 
-        /* Idle */
-        fb.when(State.Idle)
-            .on(Event.Connected)
-            .transitionTo(State.Loading);
+    /* Idle */
+    fb.when(State.Idle)
+        .on(Event.Connected)
+        .transitionTo(State.Loading);
 
-        /* Loading */
-        fb.when(State.Loading)
-            .on(Event.LoadSuccess)
-            .transitionTo(State.InService);
+    /* Loading */
+    fb.when(State.Loading)
+        .on(Event.LoadSuccess)
+        .transitionTo(State.InService);
 
-        fb.when(State.Loading)
-            .on(Event.LoadFail)
-            .transitionTo(State.OutOfService);
+    fb.when(State.Loading)
+        .on(Event.LoadFail)
+        .transitionTo(State.OutOfService);
 
-        fb.when(State.Loading)
-            .on(Event.ConnectionClosed)
-            .transitionTo(State.Disconnected);
+    fb.when(State.Loading)
+        .on(Event.ConnectionClosed)
+        .transitionTo(State.Disconnected);
 
-        /* OutOfService */
-        fb.when(State.OutOfService)
-            .on(Event.Startup)
-            .transitionTo(State.InService);
+    /* OutOfService */
+    fb.when(State.OutOfService)
+        .on(Event.Startup)
+        .transitionTo(State.InService);
 
-        fb.when(State.OutOfService)
-            .on(Event.ConnectionLost)
-            .transitionTo(State.Disconnected);
+    fb.when(State.OutOfService)
+        .on(Event.ConnectionLost)
+        .transitionTo(State.Disconnected);
 
-        /* InService */
-        fb.when(State.InService)
-            .on(Event.ConnectionLost)
-            .transitionTo(State.Disconnected);
+    /* InService */
+    fb.when(State.InService)
+        .on(Event.ConnectionLost)
+        .transitionTo(State.Disconnected);
 
-        fb.when(State.InService)
-            .on(Event.Shutdown)
-            .transitionTo(State.OutOfService);
+    fb.when(State.InService)
+        .on(Event.Shutdown)
+        .transitionTo(State.OutOfService);
 
-        /* Disconnected */
-        fb.when(State.Disconnected)
-            .on(Event.ConnectionRestored)
-            .transitionTo(State.InService);
+    /* Disconnected */
+    fb.when(State.Disconnected)
+        .on(Event.ConnectionRestored)
+        .transitionTo(State.InService);
 
-        State initialState = builderStateFunction.apply(fb);
+    State initialState = builderStateFunction.apply(fb);
 
-        return new AtmFsm(fb.build(initialState));
-    }
+    return new AtmFsm(fb.build(initialState));
+  }
 
 }

@@ -19,12 +19,12 @@ package com.digitalpetri.strictmachine.dsl;
 @FunctionalInterface
 public interface ActionProxy<S, E> {
 
-    /**
-     * Execute this action.
-     *
-     * @param context the {@link ActionContext}.
-     * @param action  the {@link Action} to execute.
-     */
-    void execute(ActionContext<S, E> context, Action<S, E> action);
+  /**
+   * Execute this action.
+   *
+   * @param context the {@link ActionContext}.
+   * @param action the {@link Action} to execute.
+   */
+  void execute(ActionContext<S, E> context, Action<S, E> action);
 
 }

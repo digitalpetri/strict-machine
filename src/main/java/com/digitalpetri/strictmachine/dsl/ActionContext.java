@@ -28,25 +28,25 @@ import com.digitalpetri.strictmachine.FsmContext;
  */
 public interface ActionContext<S, E> extends FsmContext<S, E> {
 
-    /**
-     * Get the state being transitioned from.
-     *
-     * @return the state being transitioned from.
-     */
-    S from();
+  /**
+   * Get the state being transitioned from.
+   *
+   * @return the state being transitioned from.
+   */
+  S from();
 
-    /**
-     * Get the state transitioned to.
-     *
-     * @return the state transitioned to.
-     */
-    S to();
+  /**
+   * Get the state transitioned to.
+   *
+   * @return the state transitioned to.
+   */
+  S to();
 
-    /**
-     * Get the event that caused the transition.
-     *
-     * @return the event that caused the transition.
-     */
-    E event();
+  /**
+   * Get the event that caused the transition.
+   *
+   * @return the event that caused the transition.
+   */
+  E event();
 
 }
