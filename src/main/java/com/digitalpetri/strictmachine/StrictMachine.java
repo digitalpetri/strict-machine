@@ -16,11 +16,12 @@
 
 package com.digitalpetri.strictmachine;
 
+import com.digitalpetri.strictmachine.FsmLogging.Level;
 import com.digitalpetri.strictmachine.dsl.ActionContext;
 import com.digitalpetri.strictmachine.dsl.ActionProxy;
 import com.digitalpetri.strictmachine.dsl.Transition;
 import com.digitalpetri.strictmachine.dsl.TransitionAction;
-
+import com.digitalpetri.strictmachine.internal.Log;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -136,6 +137,7 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
   }
 
   private class PendingEvent {
+
     final E event;
     final Consumer<S> stateConsumer;
 
@@ -146,6 +148,7 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
   }
 
   private class PollAndEvaluate implements Runnable {
+
     @Override
     public void run() {
       PendingEvent pending;
@@ -153,7 +156,7 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
       synchronized (queueLock) {
         pending = eventQueue.poll();
 
-        if (pending == null) return;
+        if (pending == null) {return;}
       }
 
       E event = pending.event;
@@ -175,14 +178,14 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
 
         state.set(nextState);
 
-        if (Log.isLevelEnabled(Log.Level.DEBUG)) {
-          var msg = String.format(
+        if (Log.isLevelEnabled(Level.DEBUG)) {
+          Log.debug(
+              instanceId,
               "%s x %s = %s",
               padRight(String.format("S(%s)", currState)),
               padRight(String.format("E(%s)", event)),
               padRight(String.format("S'(%s)", nextState))
           );
-          Log.log(Log.Level.DEBUG, msg);
         }
 
         var actionContext = new ActionContextImpl(
@@ -199,28 +202,27 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
           }
         }
 
-        if (Log.isLevelEnabled(Log.Level.TRACE)) {
-          Log.log(Log.Level.TRACE, String.format("found %d matching TransitionActions", matchingActions.size()));
-        }
+        Log.trace(instanceId, "found %d matching TransitionActions", matchingActions.size());
 
         matchingActions.forEach(transitionAction -> {
           try {
             if (actionProxy == null) {
-              if (Log.isLevelEnabled(Log.Level.TRACE)) {
-                Log.log(Log.Level.TRACE, String.format("executing TransitionAction: %s", transitionAction));
-              }
+              Log.trace(instanceId, "executing TransitionAction: %s", transitionAction);
 
               transitionAction.execute(actionContext);
             } else {
-              if (Log.isLevelEnabled(Log.Level.TRACE)) {
-                Log.log(Log.Level.TRACE, String.format("executing (via proxy) TransitionAction: %s", transitionAction));
-              }
+              Log.trace(
+                  instanceId,
+                  "executing (via proxy) TransitionAction: %s", transitionAction
+              );
 
               actionProxy.execute(actionContext, transitionAction::execute);
             }
           } catch (Throwable ex) {
-            Log.log(Log.Level.WARN,
-                String.format("Uncaught Throwable executing TransitionAction: %s", transitionAction), ex);
+            Log.warn(
+                instanceId,
+                "Uncaught Throwable executing TransitionAction: %s\n%s", transitionAction, ex
+            );
           }
         });
 
