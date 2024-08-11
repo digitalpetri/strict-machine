@@ -17,7 +17,7 @@ jobs:
           server-password: MAVEN_PASSWORD
 
       - name: Install GPG secret key
-      - run: |
+        run: |
           cat < (echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
 
