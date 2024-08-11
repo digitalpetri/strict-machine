@@ -25,9 +25,12 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
 public class FsmBuilder<S extends Enum<S>, E> {
+
+  private static final AtomicLong INSTANCE_ID = new AtomicLong(0);
 
   private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
 
@@ -37,13 +40,15 @@ public class FsmBuilder<S extends Enum<S>, E> {
 
   private ActionProxy<S, E> actionProxy = null;
 
+  private final Object context;
   private final Executor executor;
 
   public FsmBuilder() {
-    this(EXECUTOR_SERVICE);
+    this(INSTANCE_ID.getAndIncrement(), EXECUTOR_SERVICE);
   }
 
-  public FsmBuilder(Executor executor) {
+  public FsmBuilder(Object context, Executor executor) {
+    this.context = context != null ? context : INSTANCE_ID.getAndIncrement();
     this.executor = executor;
   }
 
@@ -146,6 +151,7 @@ public class FsmBuilder<S extends Enum<S>, E> {
 
   public Fsm<S, E> build(S initialState) {
     return new StrictMachine<>(
+        context,
         executor,
         actionProxy,
         initialState,

@@ -28,17 +28,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class StrictMachine<S, E> implements Fsm<S, E> {
-
-  private static final AtomicLong INSTANCE_ID = new AtomicLong(0);
-
-  private final long instanceId = INSTANCE_ID.getAndIncrement();
 
   private volatile boolean pollExecuted = false;
   private final Object queueLock = new Object();
@@ -49,12 +44,14 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
   private final Map<FsmContext.Key<?>, Object> contextValues = new ConcurrentHashMap<>();
   private final AtomicReference<S> state = new AtomicReference<>();
 
+  private final Object context;
   private final Executor executor;
   private final ActionProxy<S, E> actionProxy;
   private final List<Transition<S, E>> transitions;
   private final List<TransitionAction<S, E>> transitionActions;
 
   public StrictMachine(
+      Object context,
       Executor executor,
       ActionProxy<S, E> actionProxy,
       S initialState,
@@ -62,6 +59,7 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
       List<TransitionAction<S, E>> transitionActions
   ) {
 
+    this.context = context;
     this.executor = executor;
     this.actionProxy = actionProxy;
     this.transitions = transitions;
@@ -181,7 +179,7 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
 
         if (Log.isLevelEnabled(Level.DEBUG)) {
           Log.debug(
-              instanceId,
+              context,
               "%s x %s = %s",
               padRight(String.format("S(%s)", currState)),
               padRight(String.format("E(%s)", event)),
@@ -203,17 +201,17 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
           }
         }
 
-        Log.trace(instanceId, "found %d matching TransitionActions", matchingActions.size());
+        Log.trace(context, "found %d matching TransitionActions", matchingActions.size());
 
         matchingActions.forEach(transitionAction -> {
           try {
             if (actionProxy == null) {
-              Log.trace(instanceId, "executing TransitionAction: %s", transitionAction);
+              Log.trace(context, "executing TransitionAction: %s", transitionAction);
 
               transitionAction.execute(actionContext);
             } else {
               Log.trace(
-                  instanceId,
+                  context,
                   "executing (via proxy) TransitionAction: %s", transitionAction
               );
 
@@ -221,7 +219,7 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
             }
           } catch (Throwable ex) {
             Log.warn(
-                instanceId,
+                context,
                 "Uncaught Throwable executing TransitionAction: %s\n%s", transitionAction, ex
             );
           }
@@ -326,8 +324,8 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
     }
 
     @Override
-    public long getInstanceId() {
-      return instanceId;
+    public Object getContext() {
+      return context;
     }
 
   }

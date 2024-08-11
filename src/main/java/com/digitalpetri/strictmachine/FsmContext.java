@@ -78,14 +78,11 @@ public interface FsmContext<S, E> {
   void set(FsmContext.Key<?> key, Object value);
 
   /**
-   * Get the id assigned to this FSM instance.
+   * Get the user-configurable context associated with this FSM instance.
    *
-   * <p>The id is a monotonically increasing value assigned to each new instance to aid in
-   * determining which log messages belong to which instance.
-   *
-   * @return the id assigned to this FSM instance.
+   * @return the user-configurable context associated with this FSM instance.
    */
-  long getInstanceId();
+  Object getContext();
 
   final class Key<T> {
 
