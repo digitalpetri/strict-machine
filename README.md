@@ -28,7 +28,7 @@ dependencies {
 
 Given this simple ATM example:
 
-![atmfsm.png](https://github.com/digitalpetri/strict-machine/blob/master/src/test/java/com/digitalpetri/strictmachine/dsl/atm/atmfsm.png)
+![atmfsm.png](https://github.com/digitalpetri/strict-machine/blob/master/src/test/java/com/digitalpetri/fsm/dsl/atm/atmfsm.png)
 
 
 Define the State and Event types:
