@@ -18,7 +18,7 @@ jobs:
 
       - name: Install GPG secret key
         run: |
-          cat < (echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
+          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
 
       - name: Publish package
