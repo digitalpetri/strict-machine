@@ -10,7 +10,6 @@
 
 package com.digitalpetri.fsm;
 
-import com.digitalpetri.fsm.FsmLogging.Level;
 import com.digitalpetri.fsm.dsl.ActionContext;
 import com.digitalpetri.fsm.dsl.ActionProxy;
 import com.digitalpetri.fsm.dsl.Transition;
@@ -26,6 +25,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 public class StrictMachine<S, E> implements Fsm<S, E> {
 
@@ -38,23 +40,29 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
   private final Map<FsmContext.Key<?>, Object> contextValues = new ConcurrentHashMap<>();
   private final AtomicReference<S> state = new AtomicReference<>();
 
-  private final Object context;
+  private final Logger logger;
+  private final Map<String, String> mdc;
   private final Executor executor;
+  private final Object userContext;
   private final ActionProxy<S, E> actionProxy;
   private final List<Transition<S, E>> transitions;
   private final List<TransitionAction<S, E>> transitionActions;
 
   public StrictMachine(
-      Object context,
+      String loggerName,
+      Map<String, String> mdc,
       Executor executor,
+      Object userContext,
       ActionProxy<S, E> actionProxy,
       S initialState,
       List<Transition<S, E>> transitions,
       List<TransitionAction<S, E>> transitionActions
   ) {
 
-    this.context = context;
+    this.logger = LoggerFactory.getLogger(loggerName);
+    this.mdc = mdc;
     this.executor = executor;
+    this.userContext = userContext;
     this.actionProxy = actionProxy;
     this.transitions = transitions;
     this.transitionActions = transitionActions;
@@ -171,14 +179,18 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
 
         state.set(nextState);
 
-        if (Log.isLevelEnabled(Level.DEBUG)) {
-          Log.debug(
-              context,
-              "%s x %s = %s",
-              padRight(String.format("S(%s)", currState)),
-              padRight(String.format("E(%s)", event)),
-              padRight(String.format("S'(%s)", nextState))
-          );
+        if (logger.isDebugEnabled()) {
+          mdc.forEach(MDC::put);
+          try {
+            logger.debug(
+                "{} x {} = {}",
+                padRight(String.format("S(%s)", currState)),
+                padRight(String.format("E(%s)", event)),
+                padRight(String.format("S'(%s)", nextState))
+            );
+          } finally {
+            mdc.keySet().forEach(MDC::remove);
+          }
         }
 
         var actionContext = new ActionContextImpl(
@@ -195,27 +207,49 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
           }
         }
 
-        Log.trace(context, "found %d matching TransitionActions", matchingActions.size());
+        if (logger.isTraceEnabled()) {
+          mdc.forEach(MDC::put);
+          try {
+            logger.trace("found {} matching TransitionActions", matchingActions.size());
+          } finally {
+            mdc.keySet().forEach(MDC::remove);
+          }
+        }
 
         matchingActions.forEach(transitionAction -> {
           try {
             if (actionProxy == null) {
-              Log.trace(context, "executing TransitionAction: %s", transitionAction);
+              if (logger.isTraceEnabled()) {
+                mdc.forEach(MDC::put);
+                try {
+                  logger.trace("executing TransitionAction: {}", transitionAction);
+                } finally {
+                  mdc.keySet().forEach(MDC::remove);
+                }
+              }
 
               transitionAction.execute(actionContext);
             } else {
-              Log.trace(
-                  context,
-                  "executing (via proxy) TransitionAction: %s", transitionAction
-              );
+              if (logger.isTraceEnabled()) {
+                mdc.forEach(MDC::put);
+                try {
+                  logger.trace("executing (via proxy) TransitionAction: {}", transitionAction);
+                } finally {
+                  mdc.keySet().forEach(MDC::remove);
+                }
+              }
 
               actionProxy.execute(actionContext, transitionAction::execute);
             }
           } catch (Throwable ex) {
-            Log.warn(
-                context,
-                "Uncaught Throwable executing TransitionAction: %s\n%s", transitionAction, ex
-            );
+
+            mdc.forEach(MDC::put);
+            try {
+              logger.warn("uncaught Throwable executing TransitionAction: {}",
+                  transitionAction, ex);
+            } finally {
+              mdc.keySet().forEach(MDC::remove);
+            }
           }
         });
 
@@ -318,8 +352,8 @@ public class StrictMachine<S, E> implements Fsm<S, E> {
     }
 
     @Override
-    public Object getContext() {
-      return context;
+    public Object getUserContext() {
+      return userContext;
     }
 
   }

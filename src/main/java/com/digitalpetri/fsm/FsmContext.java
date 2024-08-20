@@ -76,7 +76,7 @@ public interface FsmContext<S, E> {
    *
    * @return the user-configurable context associated with this FSM instance.
    */
-  Object getContext();
+  Object getUserContext();
 
   final class Key<T> {
 
