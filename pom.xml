@@ -6,7 +6,7 @@
 
   <groupId>com.digitalpetri.fsm</groupId>
   <artifactId>strict-machine</artifactId>
-  <version>1.0.0-RC2</version>
+  <version>1.0.0</version>
 
   <name>Strict Machine</name>
   <description>
