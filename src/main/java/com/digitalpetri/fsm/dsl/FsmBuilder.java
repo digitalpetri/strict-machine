@@ -15,6 +15,7 @@ import com.digitalpetri.fsm.StrictMachine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -34,17 +35,33 @@ public class FsmBuilder<S extends Enum<S>, E> {
 
   private ActionProxy<S, E> actionProxy = null;
 
-  private final Object context;
+  private final String loggerName;
+  private final Map<String, String> mdc;
   private final Executor executor;
+  private final Object userContext;
 
   public FsmBuilder() {
-    this(INSTANCE_ID.getAndIncrement(), EXECUTOR_SERVICE);
+    this(
+        StrictMachine.class.getName(),
+        Map.of(),
+        EXECUTOR_SERVICE,
+        null
+    );
   }
 
-  public FsmBuilder(Object context, Executor executor) {
-    this.context = context != null ? context : INSTANCE_ID.getAndIncrement();
+  public FsmBuilder(
+      String loggerName,
+      Map<String, String> mdc,
+      Executor executor,
+      Object userContext
+  ) {
+
+    this.loggerName = loggerName;
+    this.mdc = mdc;
     this.executor = executor;
+    this.userContext = userContext;
   }
+
 
   /**
    * Start defining a {@link Transition} from state {@code state}.
@@ -145,8 +162,10 @@ public class FsmBuilder<S extends Enum<S>, E> {
 
   public Fsm<S, E> build(S initialState) {
     return new StrictMachine<>(
-        context,
+        loggerName,
+        mdc,
         executor,
+        userContext,
         actionProxy,
         initialState,
         new ArrayList<>(transitions),
